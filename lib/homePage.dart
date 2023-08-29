@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -80,6 +84,7 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              _buildButton('Bench'),
               _buildButton('='),
             ],
           ),
@@ -95,15 +100,41 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      onPressed: () {
-        _handleInput(label);
-      },
+      onPressed: label == 'Bench'
+          ? _handleBenchPress
+          : () {
+              _handleInput(label);
+            },
       color: Colors.white, // set button color to white
       textColor: Colors.black,
       child: Text(
         label,
         style: const TextStyle(fontSize: 24),
       ), // set text color to black
+    );
+  }
+
+  void _handleBenchPress() async {
+    int r = 500000; // Number of iterations
+
+    Stopwatch stopwatch = Stopwatch()..start(); // start the stopwatch
+    num result = 0;
+    for (int i = 0; i < r; i++) {
+      result = pow(
+          ((12345678 * 23456789 * 34567891 * 45678912 * 56789123) / 98765432),
+          r);
+    }
+    stopwatch.stop(); // stop the stopwatch
+
+    setState(() {
+      // update the _output variable with the result of the calculation
+      _output = result.toString();
+    });
+
+    // Show a toast message with the time taken for the operation
+    Fluttertoast.showToast(
+      msg: "Time taken for the operation: ${stopwatch.elapsedMilliseconds} ms",
+      toastLength: Toast.LENGTH_LONG,
     );
   }
 
